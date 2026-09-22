@@ -1,0 +1,11 @@
+site_name: Python计算器CI/CD实训项目
+site_description: GitHub Actions CI&CD + Fork工作流实训
+site_author: 你的名字
+
+theme:
+  name: material
+
+nav:
+  - 首页: README.md
+  - CI/CD流水线说明: docs/cicd.md
+  - Git Fork工作流: docs/fork.md

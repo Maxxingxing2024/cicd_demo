@@ -1,0 +1,36 @@
+name: Deploy MkDocs to GitHub Pages
+
+# 触发条件：main分支有代码合并时执行
+on:
+  push:
+    branches: [ main ]
+
+# 权限：必须给pages读写权限，允许action创建gh-pages分支提交
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+
+      - name: 安装Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安装mkdocs和主题
+        run: pip install mkdocs mkdocs-material
+
+      - name: 构建静态网页
+        run: mkdocs build
+
+      - name: 部署到gh-pages分支
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
