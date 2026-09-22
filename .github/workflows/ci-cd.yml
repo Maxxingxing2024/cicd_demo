@@ -14,10 +14,10 @@ jobs:
       - name: 拉取仓库全部代码
         uses: actions/checkout@v4
 
-      - name: 配置Python3.11环境
+      - name: 配置Python3.12环境
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: 安装代码校验、单元测试依赖
         run: pip install flake8 pytest
