@@ -1,4 +1,4 @@
-# 验证业务逻辑正确性
+from cal import my_min
 
 
 def test_min():
