@@ -1,0 +1,47 @@
+name: GitHub完整CI&CD自动化流水线
+
+# 触发规则：PR阶段跑CI，main推送阶段跑CD
+on:
+  pull_request:   # 新建/更新PR：触发代码质检CI
+  push:
+    branches: [ main ] # 仅主干合并：触发打包交付CD
+
+jobs:
+  # 【CI阶段】代码格式校验 + 单元测试（所有分支、PR必跑）
+  ci_quality_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库全部代码
+        uses: actions/checkout@v4
+
+      - name: 配置Python3.11环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 安装代码校验、单元测试依赖
+        run: pip install flake8 pytest
+
+      - name: 全局代码格式校验（Lint）
+        run: flake8 .
+
+      - name: 执行全部单元测试
+        run: pytest test_calc.py -v
+
+  # 【CD阶段】主干合并后自动打包交付（仅main分支执行）
+  cd_package_build:
+    needs: ci_quality_check # 前置CI必须全部通过才执行
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # 严格限定仅主干触发
+    steps:
+      - name: 拉取main主干最新代码
+        uses: actions/checkout@v4
+
+      - name: 自动打包可运行项目
+        run: zip -r release.zip calc.py test_calc.py
+
+      - name: 云端保存打包产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: 项目可运行包
+          path: release.zip
