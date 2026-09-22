@@ -3,4 +3,3 @@
 
 def test_min():
     assert min(5, 3) == 2
-    
