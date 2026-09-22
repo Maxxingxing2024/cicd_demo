@@ -1,4 +1,4 @@
-from calc import my_min
+from calc import my_min, my_add
 
 
 def test_min():
